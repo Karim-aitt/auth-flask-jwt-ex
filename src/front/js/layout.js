@@ -3,7 +3,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 
 import { Home } from "./pages/home";
-import { Login } from "./pages/Login.js"
+import { Login } from "./pages/Login.js";
+import { PaginaPersonal } from "./pages/paginapersonal.js"
 
 import injectContext from "./store/appContext";
 
@@ -23,7 +24,8 @@ const Layout = () => {
 					<Navbar />
 					<Routes>
 						<Route exact path="/" element={<Home />} />
-						<Route exact path="/private" element={<Login />} />
+						<Route exact path="/privates" element={<Login />} />
+						<Route exact path="/private" element={<PaginaPersonal />} />
 						<Route exact path="*" element={<h1>Not found</h1>} />
 						
 					</Routes>

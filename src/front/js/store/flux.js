@@ -4,6 +4,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			message: null,
 			nombre: null,
 			auth: false,
+			token: "tokenHi",
 			demo: [
 				{
 					title: "FIRST",
@@ -20,7 +21,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 		actions: {
 			// Use getActions to call a function within a fuction
 			login: (email, password) => {
-				fetch("https://3001-4geeksacade-reactflaskh-baz8qv3gkno.ws-eu49.gitpod.io/login", {
+				fetch("https://3001-4geeksacade-reactflaskh-baz8qv3gkno.ws-eu47.gitpod.io/login", {
 					method: 'POST',
 					body: JSON.stringify({email, password}),
 					headers: {
@@ -38,18 +39,21 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 					return res.json()
 				})
-				.then(data => sessionStorage.setItem("token", data))
+				.then(data => {
+					localStorage.setItem("token", data)
+					setStore({token: data})
+				})
 				.catch()
 			},
 
 			logout: () => {
-				sessionStorage.removeItem("token")
+				localStorage.removeItem("token")
 				setStore({auth: false})
 				setStore({nombre: null})
 			},
 
 			signup: (email, password) => {
-				fetch("https://3001-4geeksacade-reactflaskh-baz8qv3gkno.ws-eu49.gitpod.io/signup",{
+				fetch("https://3001-4geeksacade-reactflaskh-baz8qv3gkno.ws-eu47.gitpod.io/signup",{
 					method: 'POST',
 					body: JSON.stringify({email, password}),
 					headers: {
@@ -58,15 +62,44 @@ const getState = ({ getStore, getActions, setStore }) => {
 				})
 				.then(res => {
 					if (res.status == 200){
-						setStore({auth: true})
+						setStore({auth: true}) 
 						setStore({nombre: email})
+						
 					} else {
 						alert("Este usuario ya existe")
 						return "Este usuario ya existe"
 					}
 					return res.json()
 				})
-				.then(data => console.log(data))
+				.then(data =>{ 
+					localStorage.setItem("token", data)
+					setStore({token: data})
+				})
+			},
+
+			private: () => {
+				let tok = localStorage.getItem("token")
+				if(tok == getStore().token){
+
+				fetch("https://3001-4geeksacade-reactflaskh-baz8qv3gkno.ws-eu47.gitpod.io/private",{
+					method: 'GET',
+					headers: {
+						"Content-Type": "application/json",
+						"Authorization": "Bearer " + tok
+					}
+				})
+				.then(res => {
+					if(res.status == 200){
+						console.log("Todo bien con el fetch en private")
+					} else{
+						console.log("Algo ha ido mal con el token y el require en el private Fetch")
+						// return res.json()
+					}
+
+				})} else {
+					return "Validation error flux 97"
+				}
+
 			},
 
 			exampleFunction: () => {

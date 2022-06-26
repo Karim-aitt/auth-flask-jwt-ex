@@ -101,13 +101,21 @@ def signup():
 
     user = User(email=body["email"], password=body["password"], is_active=True)
     db.session.add(user)
+    
+
+    data = {
+        'email': user.email,
+        'user_id': user.id
+    }
+    token = create_access_token(identity=data)
     db.session.commit()
-    return jsonify(user.serialize())
+    return jsonify(token)
+    # return jsonify(user.serialize())
 
 @app.route("/private", methods=['GET'])
 @jwt_required()
 def privado():
-    return "Esta página es privada y solo la verás si estas logueado // 403"
+    return "Esta página es privada y solo la verás si estas logueado // private Backend"
 
 
 # this only runs if `$ python src/main.py` is executed

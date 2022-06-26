@@ -11,7 +11,7 @@ export const Home = () => {
 
 	return (
 		<>
-		{store.auth == true ? <Navigate to="/private"/> : 
+		{store.auth == true ? <Navigate to="/privates"/> : //borrar
 
 			<div className="text-center mt-5">
 				<input className="mx-2" onChange={(e) => setEmail(e.target.value)} type="text" placeholder="email"></input>
